@@ -1,0 +1,40 @@
+= 1.2 Mirror into the trust boundary
+:description: Name the oc-mirror step without performing it live
+
+On this page you understand why the published Hummingbird digest must land inside a registry the hub trusts. You do not run `oc-mirror` during the ten-minute walk.
+
+== Why this control exists
+
+Field delivery mirrors signed bases into an internal registry so builds never pull the public catalog at build time. The digest that lands on the `FROM` line is the dest digest after the mirror, not a mutable tag from the public internet.
+
+== Learning objectives
+
+* Explain why a dest digest is recorded in source
+* Name `oc-mirror` as the transfer tool without treating it as a live Check on this hub
+
+== Your change
+
+On a prepared demo hub, the mirrored digest is already in source and in the build path. Do not start an `oc-mirror` job on camera.
+
+If you are building a disconnected procedure offline, follow the product docs for oc-mirror plugin v2, then record the dest digest for track 3.
+
+== Check
+
+Confirm the spoken sentence: the hub names the Hummingbird mirror; it does not perform it live. The ten-minute walk starts from a cluster where that digest is already bound in source.
+
+[source,sh]
+----
+# Optional offline rehearsal only — not part of the ten-minute clock.
+# oc-mirror ...
+# Record the dest digest for the FROM line in application source.
+----
+
+== Official documentation
+
+* oc-mirror plugin v2
+* Disconnected installation mirroring
+
+== Key takeaways
+
+* Mirror first, then bind the dest digest in git.
+* Physical air-gap transfer is a different procedure. This hub stays networked.

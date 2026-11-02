@@ -1,0 +1,32 @@
+= 3.3 Live Renovate
+:description: Name Renovate as the pin-update path without merging a live PR
+
+On this page you name how a new Network or Premier pin arrives without a hand-edit. You do not merge a live Renovate pull request during the ten-minute walk.
+
+== Why this control exists
+
+Hand-editing pins does not scale. Renovate (MintMaker in some engagements) opens a pull request when a new `.rhlw-*` coordinate is available. During an embargo, merge the pin and keep advisory text out of a public pull-request description. This hub has no embargo exercise and no live bot PR in the spoken path.
+
+== Learning objectives
+
+* Name Renovate as the automated pin path
+* State that a hand-edit of the same file is not the Check this track wants in a full workshop
+* Keep the ten-minute walk free of a live merge
+
+== Your change
+
+Say one sentence: Renovate would open the PR; this prepared hub already has the pin in source. Do not configure a Renovate bot on camera.
+
+== Check
+
+Confirm the spoken sentence is on your script. No cluster command is required for this named step.
+
+== Official documentation
+
+* Renovate documentation
+* Lightwell Network patch delivery lifecycle
+
+== Key takeaways
+
+* Automation updates pins. Source remains the system of record.
+* Premier embargo messaging stays out of public PR text. This showroom does not run that exercise.

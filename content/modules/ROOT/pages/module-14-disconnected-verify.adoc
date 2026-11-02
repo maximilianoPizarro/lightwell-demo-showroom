@@ -1,0 +1,31 @@
+= 5.3 Disconnected verify
+:description: Practice key-based verify without running a physical air gap
+
+On this page you name the disconnected verify procedure. This hub stays on the network. You do not demonstrate a data diode or USB drop during the ten-minute walk.
+
+== Why this control exists
+
+Some customer environments verify signatures without reaching the public Rekor or Fulcio endpoints. A key-based `cosign verify --key` flow is the procedure you rehearse offline. The cluster for this demo remains networked.
+
+== Learning objectives
+
+* Distinguish keyless verify (live on this hub) from key-based verify (named procedure)
+* Avoid claiming a physical air gap on this environment
+
+== Your change
+
+Say one sentence: disconnected verify is a key-based procedure; this cluster stays networked. Keep the live Check on keyless verify from 5.1.
+
+== Check
+
+No additional cluster command. Confirm the sentence is on the spoken script. Optional offline rehearsal uses a local public key and `cosign verify --key` per product docs. Never commit `cosign.key`.
+
+== Official documentation
+
+* Cosign key-based verification
+* Disconnected transfer playbooks for artifacts and trust roots
+
+== Key takeaways
+
+* Practice the procedure. Do not invent an air gap on a networked demo hub.
+* Trust roots and keys stay off git.

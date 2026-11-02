@@ -1,0 +1,14 @@
+---
+name: modules
+title: Lightwell Demo Showroom
+version: master
+start_page: index.adoc
+nav:
+  - modules/ROOT/nav.adoc
+
+asciidoc:
+  attributes:
+    page-pagination: true
+    lab_name: Lightwell Demo Showroom
+    workshop-title: Lightwell Demo Showroom
+    page-toclevels: 2

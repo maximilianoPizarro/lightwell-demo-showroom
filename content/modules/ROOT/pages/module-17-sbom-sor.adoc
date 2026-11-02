@@ -1,0 +1,40 @@
+= 7.1 SBOM system of record
+:description: Ingest the promoted digests into Trusted Profile Analyzer
+
+On this page you open Red Hat Trusted Profile Analyzer as the system of record for SBOMs. A signed image still needs a record of what is inside it.
+
+== Why this control exists
+
+Trusted Profile Analyzer holds the SBOM inventory and, with advisories, the statement of whether a Lightwell pin closed a vulnerability. Network VEX and OSV are the post-disclosure path. Premier member advisories ingest into the same store when that model applies. This hub has no embargo exercise.
+
+== Learning objectives
+
+* Open the Trusted Profile Analyzer route
+* Open both image tags from the two PipelineRuns: stock and Lightwell
+* Confirm the pipeline publish-to-TPA step Succeeded during prep
+
+== Your change
+
+Open Trusted Profile Analyzer from the OpenShift application menu (namespace `trusted-profile-analyzer`). Find SBOMs for both tags produced by the stock and Lightwell PipelineRuns. Inspect packages for a `.rhlw-*` coordinate on the Lightwell SBOM.
+
+NOTE: Token minting for publish uses the in-cluster Red Hat build of Keycloak issuer the operator expects. Do not troubleshoot publish with a token from the public Route issuer during the show.
+
+== Check
+
+[source,sh]
+----
+oc -n trusted-profile-analyzer get route
+oc -n lightwell-demo get pipelinerun
+----
+
+Expect Routes to exist and the Lightwell PipelineRun that published the SBOM to be Succeeded.
+
+== Official documentation
+
+* Trusted Profile Analyzer overview
+* CycloneDX SBOM ingestion
+
+== Key takeaways
+
+* The system of record is TPA, not a screenshot of a scanner.
+* Open both tags. The comparison is the point.

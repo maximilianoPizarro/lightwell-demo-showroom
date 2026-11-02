@@ -1,0 +1,42 @@
+= 3.1 Golden-path source
+:description: Own the application source that the pipeline clones
+
+On this page you confirm the pipeline and Dev Spaces clone application source you control. Pins that live only in a workstation file drift back to public versions on the next build.
+
+== Why this control exists
+
+The mirrored Hummingbird digest and the Lightwell pins have to live in git. The build clones that remote. Developers open the same tree in Dev Spaces.
+
+On this hub the source remote is private. A git credential Secret is projected for the pipeline and for Dev Spaces. Never commit that credential.
+
+== Learning objectives
+
+* Locate the DevWorkspace and the pipeline git-clone task
+* Confirm the git credential Secret exists without printing it
+* State that the golden path is source ownership, not a public pastebin
+
+== Your change
+
+. Open Dev Spaces from the OpenShift application menu.
+. Confirm DevWorkspace `lightwell-demo` in namespace `lightwell-demo` is started.
+. Confirm Secret `lightwell-git` exists. Do not print its keys.
+
+[source,sh]
+----
+oc -n lightwell-demo get secret lightwell-git
+oc -n lightwell-demo get devworkspace lightwell-demo
+----
+
+== Check
+
+The Dev Spaces workspace opens the application tree. The POM from track 2 is present. You do not edit the file during the ten-minute walk.
+
+== Official documentation
+
+* OpenShift Dev Spaces user guide
+* OpenShift Pipelines git-clone task
+
+== Key takeaways
+
+* Source you own is the system of record for base and library pins.
+* Git credentials stay in Vault / ExternalSecrets projections, not in AsciiDoc.

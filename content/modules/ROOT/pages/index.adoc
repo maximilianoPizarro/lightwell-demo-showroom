@@ -1,0 +1,127 @@
+= Lightwell Demo Showroom
+:description: Map for implementing a single-hub Lightwell trusted software supply chain demo on OpenShift
+
+This page is the map for the showroom. You are about to walk *one* trusted software supply chain on a dedicated OpenShift hub and prove, for a single production container, where the base came from, which libraries you compiled in, which source pinned both, how the build stayed inside the trust boundary, who signed the image, which digest production is allowed to run, and how a known vulnerability shows up as remediated.
+
+The walk has seven tracks. You verify a Hummingbird base, consume Lightwell dependencies, own the application source, build hermetically, sign and attest, promote a production container, then prove continuous compliance.
+
+The spoken path on a prepared cluster is about ten minutes. Operator install and the first Succeeded PipelineRuns are prep. They are not part of the ten minutes. The install appendix is for the person who builds the hub before the show.
+
+== What a trusted software supply chain proves
+
+A *trusted software supply chain* (TSSC) is the set of controls that let you answer three questions for every production container. What went into the image? Who built it and signed it? Are known vulnerabilities remediated, without treating the public internet as a trusted input?
+
+On OpenShift, the products you open in this demo are:
+
+* Signed and attested artifacts, in Red Hat Trusted Artifact Signer
+* A system of record for SBOMs and advisories, in Red Hat Trusted Profile Analyzer
+* Runtime and pipeline policy, in Red Hat Advanced Cluster Security and in Conforma (`ec`)
+* Promotion by Git, in OpenShift GitOps
+* A developer workspace for the application repo, in OpenShift Dev Spaces
+
+TSSC does not start when a pipeline runs. It starts with *inputs you can name*: a signed runtime base, application libraries from a trusted repository, and source that records both pins. Hummingbird is the base. Lightwell is the library layer.
+
+== Lightwell Network and Clearinghouse Premier
+
+Lightwell is the Red Hat and IBM initiative that maintains third-party application dependencies. A scanner can name a vulnerability that your team cannot upgrade away from. Lightwell supplies a security-only fix on the version you already run. Remediated coordinates use a `.rhlw-*` version suffix.
+
+This showroom scores the *Lightwell Network* post-disclosure path. Clearinghouse Premier uses the same proxy, the same pin shape, and the same evidence store. There is no embargo exercise here. Say that once in the first minute of a live walk, then continue.
+
+Keep the layers separate. Lightwell covers application-layer dependencies. RHEL, OpenShift, and ACS cover the operating system and the platform. Hummingbird, part of Red Hat Hardened Images, is the runtime foundation the container starts from.
+
+== How this showroom maps to TSSC
+
+|===
+| TSSC objective | Where you observe it | Notes
+
+| Trusted runtime input (signed minimal base)
+| xref:module-01-hummingbird-verify.adoc[1.1]; xref:module-02-hummingbird-mirror.adoc[1.2]
+| Hummingbird is not a Lightwell GAV. Mirror is named, not performed live on this hub.
+
+| Trusted library input (enterprise proxy)
+| xref:module-03-enterprise-proxy.adoc[2.1]
+| In-cluster Nexus stands in for the customer artifact manager.
+
+| Exact-version remediation
+| xref:module-04-remediated-pin.adoc[2.2]
+| Pin an exact `.rhlw-*` from a Lightwell fixed event. This showroom does not publish the demo GAV.
+
+| Source of truth binds those pins
+| xref:module-05-golden-path-source.adoc[3.1]–xref:module-07-live-renovate.adoc[3.3]
+| Renovate is named. You do not merge a live bot PR during the ten-minute walk.
+
+| Hermetic production of the image
+| xref:module-08-forbid-list.adoc[4.1]–xref:module-11-build-sbom.adoc[4.4]
+| OpenShift Pipelines: Maven through Nexus, image build, CycloneDX SBOM.
+
+| Integrity of the app artifact
+| xref:module-12-sign-keyless.adoc[5.1]–xref:module-14-disconnected-verify.adoc[5.3]
+| Keyless Fulcio / Rekor / TUF. Red Hat build of Keycloak does not sign the image.
+
+| Only the signed digest may run
+| xref:module-15-gitops-admission.adoc[6.1]–xref:module-16-prod-gitops.adoc[6.2]
+| Stage can use a stock tag. Production admits a digest.
+
+| Continuous compliance
+| xref:module-17-sbom-sor.adoc[7.1]–xref:module-18-vex-acs.adoc[7.2]
+| Trusted Profile Analyzer and ACS for both stock and Lightwell image tags. Do not skip ACS.
+|===
+
+== Seven tracks
+
+Work the tracks in order when you are implementing. On each numbered page, *Your change* is the edit or console action. *Check* is the command sequence that should succeed afterward. Later pages assume the earlier work landed.
+
+On a cluster that is already reconciled, use the ten-minute spoken path instead: open screens and logs. Do not wait for Maven on camera.
+
+== What this showroom does not include
+
+|===
+| Not in this showroom | What you do instead
+
+| Hosted Konflux
+| Builds run as OpenShift Pipelines. Do not install Konflux on this hub.
+
+| Quay or OpenShift Data Foundation
+| The signed image stays on the internal registry. Storage is the default gp3 StorageClass.
+
+| SPIRE or Zero Trust Workload Identity Manager
+| This pattern is a supply-chain slice, not the full Layered Zero Trust stack.
+
+| A physical air gap
+| Track 5.3 is the key-based verify procedure. The cluster stays on the network.
+
+| Building Hummingbird images
+| You verify and consume published Red Hat Hardened Images.
+
+| A live Clearinghouse Premier membership or embargo window
+| You practice the post-disclosure Network pin and the controls Premier would reuse.
+
+| Exact remediated library coordinates from a private demo
+| The pages describe the `.rhlw-*` suffix and the stock vs Lightwell profiles. They do not publish the demo GAV.
+|===
+
+== Honor system
+
+There is no gated Validate Job in this documentation repo. Success is a Healthy Argo CD Application list, Succeeded PipelineRuns, a passing `cosign verify`, a denied unsigned production Deployment, and ACS plus Trusted Profile Analyzer open on both image tags.
+
+Never commit credentials. Leave `GITHUB_TOKEN`, `LIGHTWELL_TOKEN`, and similar values in environment variables or a local gitignored secrets file. Do not print them.
+
+== Before you start
+
+. Read xref:appendix-install.adoc[Install the hub pattern] if the cluster is empty.
+. Finish prep until two PipelineRuns are Succeeded: Lightwell for demo and prod, stock for stage.
+. Open the architecture picture, Dev Spaces on the application POM, Nexus, the PipelineRun list, Argo CD, Trusted Profile Analyzer, ACS, and the three application routes.
+. Start hands-on reading at xref:module-01-hummingbird-verify.adoc[1.1 Verify Hummingbird].
+
+== Official documentation
+
+* https://www.redhat.com/en/lightwell[Red Hat Lightwell]
+* https://docs.redhat.com/[Lightwell Network documentation on docs.redhat.com]
+* https://docs.redhat.com/[Red Hat Hardened Images / Hummingbird]
+* Trusted Artifact Signer, Trusted Profile Analyzer, Advanced Cluster Security, OpenShift GitOps, OpenShift Pipelines product docs
+
+== Start here
+
+xref:module-01-hummingbird-verify.adoc[1.1 Verify Hummingbird] when you are ready for the first control.
+
+If you are delivering the walk rather than installing, keep xref:appendix-named-not-live.adoc[Named, not performed live] open for the sentences you say instead of running those steps.

@@ -1,0 +1,43 @@
+= 5.1 Sign (keyless)
+:description: Sign the application image with Trusted Artifact Signer
+
+On this page you confirm the application digest is signed keylessly with Red Hat Trusted Artifact Signer (Fulcio, Rekor, TUF). Lightwell already signed the library. Those are distinct layers. Red Hat build of Keycloak does not sign the image.
+
+== Why this control exists
+
+Production must be able to answer who built and signed the application artifact. Keyless signing against the in-cluster signer gives a short-lived certificate identity bound to the Kubernetes issuer, with the signature recorded in Rekor.
+
+== Learning objectives
+
+* Name Fulcio, Rekor, and TUF as the RHTAS pieces on this hub
+* Run `cosign verify` against the signed digest using the Rekor route
+* Keep Keycloak out of the signing sentence
+
+== Your change
+
+Open the PipelineRun logs for the sign task. Note keyless `cosign sign` against Fulcio and Rekor in namespace `trusted-artifact-signer`.
+
+== Check
+
+Replace hosts and digest from the cluster. Do not invent them.
+
+[source,sh]
+----
+cosign verify --allow-insecure-registry \
+  --rekor-url "https://REKOR_HOST" \
+  --certificate-identity-regexp ".*" \
+  --certificate-oidc-issuer "https://kubernetes.default.svc" \
+  IMAGE@sha256:DIGEST
+----
+
+Expect a successful verify. Discover `REKOR_HOST` from the Routes in `trusted-artifact-signer`.
+
+== Official documentation
+
+* Trusted Artifact Signer deployment guide
+* Cosign keyless verification
+
+== Key takeaways
+
+* You sign the application image. Lightwell signed the library.
+* Keycloak is demo identity for other flows. It is not the signer.

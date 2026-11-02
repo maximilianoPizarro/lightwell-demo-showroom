@@ -1,0 +1,92 @@
+= Install the hub pattern
+:description: Prep steps for the single-hub Validated Pattern-style Lightwell demo
+
+This appendix is for the person who builds the hub before the show. Operator install is not part of the ten-minute walk.
+
+== Cluster shape
+
+OpenShift on a multinode hub. Recommended AWS shape for this demo:
+
+* 3 control plane nodes: `m5a.2xlarge` (8 vCPU, 32 GiB)
+* 3 workers: `m5a.4xlarge` (16 vCPU, 64 GiB)
+* Default gp3 StorageClass. About 250 GiB of persistent volumes
+* Do not enable OpenShift Data Foundation for this demo
+
+Smaller workers leave Dev Spaces and the ACS collector Pending.
+
+== What GitOps installs
+
+Argo CD on the hub renders one Application per entry in the pattern’s hub values file. Typical Applications:
+
+|===
+| Application | Namespace | Role
+
+| Vault | `vault` | Secret store loaded from a local secrets file
+| External Secrets | `external-secrets` | Projects Vault keys into the demo namespace
+| OpenShift Pipelines | `openshift-operators` | Hermetic build
+| Trusted Artifact Signer | `trusted-artifact-signer` | Keyless Fulcio, Rekor, and TUF
+| Trusted Profile Analyzer | `trusted-profile-analyzer` | SBOM system of record (in-cluster PostgreSQL and MinIO)
+| Dependency Analytics | `trusted-dependency-analytics` | RHDA backend for Dev Spaces
+| Advanced Cluster Security | `stackrox` | Central and a secured cluster on this hub
+| Dev Spaces | `openshift-devspaces` | Developer workspace
+| Nexus | `lightwell-demo` | Maven proxy to Lightwell
+| Red Hat build of Keycloak | `lightwell-demo` | Demo identity. It does not sign images
+| JBoss EAP | `lightwell-demo` | The application
+| Pipeline | `lightwell-demo` | Build, SBOM, keyless sign
+| GitOps promote | `lightwell-stage`, `lightwell-prod` | Stage = stock tag; production = Lightwell digest
+| Console links | `lightwell-demo` | Application menu entries
+|===
+
+This pattern does not install SPIRE, the Zero Trust Workload Identity Manager, Quay, or OpenShift Data Foundation.
+
+== Secrets (do not commit)
+
+The Patterns Operator needs a git token Secret before Vault exists. Application credentials follow the Validated Patterns framework: a local gitignored secrets file, then `make install`, which loads secrets into Vault. ExternalSecrets in `lightwell-demo` materialize `lightwell-sa` and `lightwell-git`.
+
+[source,sh]
+----
+export GITHUB_USER=...
+export GITHUB_TOKEN=...
+export LIGHTWELL_USERNAME=...
+export LIGHTWELL_TOKEN=...
+# Run the pattern’s prep and write-secrets scripts from the private tree.
+# They must not print the values.
+./pattern.sh make install
+----
+
+Podman 4.3 or newer is required by `pattern.sh`. Never commit `LIGHTWELL_TOKEN`, the GitHub token, or `cosign` keys.
+
+== Sync waves (concept)
+
+New apps land on a wave after the operators they need. Approximate order on this hub:
+
+* Early: namespaces, Vault, External Secrets
+* Mid: RHTAS, RHACS, Dev Spaces, RHTPA
+* Later: ExternalSecrets into `lightwell-demo`, Nexus, Keycloak, JBoss, pipeline, GitOps promote
+
+Exact wave numbers live in the private pattern’s hub values. Do not invent CR snippets here.
+
+== Before the show (prep)
+
+. Confirm ExternalSecrets `lightwell-sa` and `lightwell-git` exist. Do not print them.
+. Wait for hub Argo CD Applications to be Healthy and Synced (Vault, ESO, RHTAS, RHTPA, RHDA, RHACS, Dev Spaces, Nexus, RHBK, JBoss, pipeline, gitops-promote, console links).
+. Wait for PipelineRun `lightwell-build-deploy` to Succeeded. Maven is prep.
+. Start the stock profile PipelineRun so stage is ready.
+. Rehearse `cosign verify` and the unsigned production deny.
+. Open tabs: architecture, Dev Spaces POM, Nexus, PipelineRuns, Argo CD, TPA, ACS, three app routes.
+
+Then follow the seven tracks for the spoken path. Close on the webapp home, not only on health JSON.
+
+== Install checks (high level)
+
+* CatalogSource for community operators is present when the Patterns Operator expects it.
+* A default StorageClass exists.
+* Secret `git-token` exists in `openshift-operators` before the first clone.
+* External Secrets can reach Vault on port 8200.
+* The private pattern remote is readable by the git token you supply.
+
+== Related public material
+
+* https://validatedpatterns.io/[Validated Patterns]
+* https://rhpds.github.io/lightwell-tssc-workshop/modules/index.html[Lightwell Software Supply Chain Security Workshop] (full gated lab map)
+* https://www.redhat.com/en/lightwell[Red Hat Lightwell]

@@ -1,0 +1,47 @@
+= 3.2 Bind base and deps
+:description: Commit the Hummingbird FROM digest and Lightwell pins in source
+
+On this page you confirm that application source binds both trusted inputs: the Hummingbird dest digest on the container `FROM` line, and the Lightwell `.rhlw-*` pins in the Maven profile.
+
+== Why this control exists
+
+A proxy alone is not enough. If source still points at a public base tag or a stock library version, the next build drifts. Binding both pins in git is the control track 3 exists for.
+
+== Learning objectives
+
+* Point at the container file `FROM` digest as the Hummingbird bind
+* Point at the `lightwell` Maven profile as the library bind
+* Explain stock versus Lightwell as two PipelineRun profiles on the same tree
+
+== Your change
+
+In Dev Spaces:
+
+. Open the container build file and confirm `FROM` uses a digest, not a floating public tag, for the runtime base.
+. Open the POM and confirm profile `lightwell` sets `.rhlw-*` properties.
+. Leave the files unchanged during the spoken demo. The bind is already committed on a prepared hub.
+
+== Check
+
+[source,sh]
+----
+# Two Succeeded runs: lightwell (demo/prod) and stock (stage).
+oc -n lightwell-demo get pipelinerun
+
+# Health endpoints after both runs (replace APPS).
+curl -sk "https://jboss-app-lightwell-demo.${APPS}/health"
+curl -sk "https://jboss-app-lightwell-stage.${APPS}/health"
+curl -sk "https://jboss-app-lightwell-prod.${APPS}/health"
+----
+
+Expect `scenario: lightwell` on demo and prod, and `scenario: stock` on stage, when those endpoints are enabled.
+
+== Official documentation
+
+* Dockerfile best practices for digest pinning
+* Maven profiles
+
+== Key takeaways
+
+* Base digest and library pins travel together in source.
+* Stock versus Lightwell is a profile choice for comparison, not two different products.

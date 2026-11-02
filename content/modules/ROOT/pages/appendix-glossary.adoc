@@ -1,0 +1,54 @@
+= Acronym glossary
+:description: Short glossary for the Lightwell demo showroom
+
+|===
+| Term | Meaning
+
+| ACS
+| Red Hat Advanced Cluster Security
+
+| Conforma / `ec`
+| Enterprise Contract CLI for signature and attestation policy
+
+| ESO
+| External Secrets Operator
+
+| Fulcio / Rekor / TUF
+| Certificate authority, transparency log, and trust root pieces used by Trusted Artifact Signer
+
+| GAV
+| Maven groupId:artifactId:version coordinate
+
+| Hummingbird
+| Red Hat Hardened Images runtime base
+
+| Lightwell Network
+| Post-disclosure membership model for remediated and validated libraries
+
+| Clearinghouse Premier
+| Limited-availability model that reuses the same proxy, pin, and evidence controls
+
+| `.rhlw-*`
+| Version suffix for a Lightwell security-only rebuild on an upstream line
+
+| RHBK
+| Red Hat build of Keycloak (demo identity on this hub; does not sign images)
+
+| RHDA
+| Red Hat Dependency Analytics
+
+| RHTAS
+| Red Hat Trusted Artifact Signer
+
+| RHTPA / TPA
+| Red Hat Trusted Profile Analyzer
+
+| SBOM
+| Software Bill of Materials (CycloneDX on this hub)
+
+| TSSC
+| Trusted software supply chain
+
+| VEX
+| Vulnerability Exploitability eXchange advisory bound to a component
+|===

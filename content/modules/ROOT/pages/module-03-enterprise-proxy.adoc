@@ -1,0 +1,63 @@
+= 2.1 Enterprise proxy
+:description: Point Maven at in-cluster Nexus for Lightwell channels
+
+On this page you prove that Maven resolves Lightwell libraries from the enterprise proxy on the hub, not from the public Maven Central index.
+
+== Why this control exists
+
+Field delivery puts an artifact manager between developers and `packages.redhat.com`. On this OpenShift hub that stand-in is Nexus. Developers point Maven at Nexus. Nexus holds the Lightwell service-account credentials. The Maven client settings do not embed those credentials.
+
+Lightwell Network publishes Validated and Remediated channels. Validated matches the upstream release and is signed, with an SBOM. Remediated is the security backport you pin on the next page. Customers consume both the way they consume every other library: a remote or a virtual in Nexus or Artifactory.
+
+Clearinghouse Premier remediations land in this same proxy. There is no Premier-only Maven protocol.
+
+== Learning objectives
+
+* Name the in-cluster Nexus repository that proxies Lightwell Validated
+* Confirm Maven `settings.xml` uses a mirror of all remotes and does not carry Lightwell credentials
+* Describe how Artifactory and `pip.conf` express the same control
+
+== Your change
+
+On the prepared hub:
+
+. Open the OpenShift application menu section for Lightwell and open Nexus.
+. Browse the proxy repository named `maven-lightwell-validated` (it participates in the `maven-public` group).
+. In Dev Spaces or the pipeline ConfigMap, confirm Maven settings use `mirrorOf *` aimed at Nexus.
+. Confirm Secret `lightwell-sa` exists in namespace `lightwell-demo` and is not printed.
+
+[source,sh]
+----
+oc -n lightwell-demo get secret lightwell-sa
+# Do not run oc extract or jsonpath that prints username or token.
+----
+
+== Check
+
+[source,sh]
+----
+# Nexus route should answer. Replace APPS with the cluster apps domain.
+curl -skI "https://nexus-lightwell-demo.${APPS}/"
+
+# Pipeline Maven settings ConfigMap is present.
+oc -n lightwell-demo get configmap maven-settings-lightwell
+----
+
+Expect Nexus to respond and the settings ConfigMap to exist. A settings file that falls through only to Maven Central fails the control story.
+
+== The same proxy in other tools
+
+* Python uses `pip.conf` `index-url` the way this hub uses Maven settings.
+* Artifactory is a remote plus a virtual with include and exclude patterns against the same Lightwell URLs. This hub does not install Artifactory.
+
+== Official documentation
+
+* Configure your Java build tool for Lightwell Network
+* Choose Validated or Remediated
+* Configure Artifactory for Lightwell Network Java repositories
+
+== Key takeaways
+
+* The library input is the enterprise proxy. Nexus is the stand-in on this hub.
+* Credentials stay in a Secret. Maven settings point at Nexus only.
+* The next page pins an exact `.rhlw-*` version. This page only proves the proxy path.

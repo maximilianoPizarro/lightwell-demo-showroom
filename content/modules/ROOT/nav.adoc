@@ -1,0 +1,38 @@
+* xref:index.adoc[Workshop home]
+
+* Track 1 — Hummingbird
+** xref:module-01-hummingbird-verify.adoc[1.1 Verify Hummingbird]
+** xref:module-02-hummingbird-mirror.adoc[1.2 Mirror into the trust boundary]
+
+* Track 2 — Lightwell dependencies
+** xref:module-03-enterprise-proxy.adoc[2.1 Enterprise proxy]
+** xref:module-04-remediated-pin.adoc[2.2 Remediated pin]
+
+* Track 3 — Source
+** xref:module-05-golden-path-source.adoc[3.1 Golden-path source]
+** xref:module-06-bind-base-deps.adoc[3.2 Bind base and deps]
+** xref:module-07-live-renovate.adoc[3.3 Live Renovate]
+
+* Track 4 — Hermetic build
+** xref:module-08-forbid-list.adoc[4.1 Source forbid-list]
+** xref:module-09-prefetch.adoc[4.2 Prefetch]
+** xref:module-10-build-netpol.adoc[4.3 Build NetworkPolicy]
+** xref:module-11-build-sbom.adoc[4.4 Build and SBOM]
+
+* Track 5 — Signed and attested image
+** xref:module-12-sign-keyless.adoc[5.1 Sign (keyless)]
+** xref:module-13-attest-conforma.adoc[5.2 Attest + Conforma]
+** xref:module-14-disconnected-verify.adoc[5.3 Disconnected verify]
+
+* Track 6 — Production container
+** xref:module-15-gitops-admission.adoc[6.1 GitOps + admission]
+** xref:module-16-prod-gitops.adoc[6.2 Promote to prod]
+
+* Track 7 — Continuous compliance
+** xref:module-17-sbom-sor.adoc[7.1 SBOM system of record]
+** xref:module-18-vex-acs.adoc[7.2 VEX blast radius + ACS]
+
+* Appendix
+** xref:appendix-install.adoc[Install the hub pattern]
+** xref:appendix-named-not-live.adoc[Named, not performed live]
+** xref:appendix-glossary.adoc[Acronym glossary]

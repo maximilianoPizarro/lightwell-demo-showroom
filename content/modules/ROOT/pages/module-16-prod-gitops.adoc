@@ -1,0 +1,42 @@
+= 6.2 Promote to prod
+:description: Production runs the signed Lightwell digest via GitOps
+
+On this page you confirm production is a separate promote from stage. The signed Lightwell digest is what `lightwell-prod` runs.
+
+== Why this control exists
+
+If production still tracks stage, the stock tag can become the production story. A second promote commits the signed digest into the production path. The Check fails if prod is still on the stage tag.
+
+== Learning objectives
+
+* Show `lightwell-prod` on `@sha256:`
+* Show `lightwell-stage` on the stock comparison path
+* Close the GitOps story before opening the compliance consoles
+
+== Your change
+
+Open the three application routes. Prefer the webapp home for the spoken close (stock line on stage, `.rhlw-*` line on demo and prod). Health JSON is optional for operators.
+
+== Check
+
+[source,sh]
+----
+# Replace APPS with the cluster apps domain.
+curl -sk "https://jboss-app-lightwell-stage.${APPS}/"
+curl -sk "https://jboss-app-lightwell-demo.${APPS}/"
+curl -sk "https://jboss-app-lightwell-prod.${APPS}/"
+
+oc -n lightwell-prod get deploy jboss-app -o jsonpath='{.spec.template.spec.containers[0].image}{"\n"}'
+----
+
+Expect production’s image field to include `@sha256:`.
+
+== Official documentation
+
+* OpenShift GitOps Application sync
+* Image digest references in Kubernetes
+
+== Key takeaways
+
+* Promote is a digest commit, not a tag copy into prod.
+* The webapp home is the customer-facing close for stock versus Lightwell.

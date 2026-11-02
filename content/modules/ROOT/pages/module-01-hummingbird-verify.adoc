@@ -1,0 +1,47 @@
+= 1.1 Verify Hummingbird
+:description: Prove the published Hummingbird runtime base before anything else
+
+On this page you name the signed runtime base. Lightwell remediates application libraries. It does not replace Hummingbird.
+
+== Why this control exists
+
+A trusted software supply chain starts with a runtime you can verify. Red Hat Hardened Images (Hummingbird) are that base. You confirm the published digest and the Hardened Images signing key before you put a `FROM` line in application source.
+
+== Learning objectives
+
+* Distinguish the Hummingbird runtime layer from the Lightwell library layer
+* Point at the official Hardened Images documentation for `cosign verify`
+* State that this hub names the base; it does not rebuild Hummingbird
+
+== Your change
+
+Open the architecture diagram for the hub. Say the three layers once:
+
+. Hummingbird is the signed runtime base.
+. Lightwell is the library pin with a `.rhlw-*` suffix.
+. Trusted Artifact Signer signs the *application* image after the build.
+
+Do not say that Keycloak signs the image. Do not say the ACS scan blocks the deploy.
+
+== Check
+
+Confirm you can state the three layers without conflating them. On a workstation with the published Hummingbird digest and the Hardened Images public key material from product docs:
+
+[source,sh]
+----
+# Replace IMAGE and DIGEST from the Hardened Images catalog.
+# Use the verify flags documented for Red Hat Hardened Images.
+cosign verify IMAGE@sha256:DIGEST
+----
+
+This showroom does not embed a catalog digest. Take the digest from the official catalog when you run the command outside the ten-minute walk.
+
+== Official documentation
+
+* Verify Red Hat Hardened Images
+* Red Hat Hardened Images overview
+
+== Key takeaways
+
+* Hummingbird is complementary to Lightwell. Premier does not replace Hardened Images.
+* The next page is the mirror into a registry this cluster trusts. That step is named, not performed live on the prepared hub.

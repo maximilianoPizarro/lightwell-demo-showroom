@@ -1,0 +1,37 @@
+= Lightwell Demo Showroom
+
+Public step-by-step guide for implementing a single-hub Lightwell trusted software supply chain demo on OpenShift.
+Built with https://antora.org[Antora] for the Red Hat Demo Platform Showroom format.
+
+== Local preview
+
+[source,sh]
+----
+podman run --rm --name antora -v "$PWD":/antora -p 8080:8080 -i -t ghcr.io/juliaaano/antora-viewer
+----
+
+Or with Node:
+
+[source,sh]
+----
+npm i -g @antora/cli@3.1 @antora/site-generator@3.1
+antora --fetch site.yml
+----
+
+Open `www/modules/index.html`.
+
+== What this repository is
+
+* AsciiDoc lab pages under `content/modules/ROOT/pages/`
+* Navigation that mirrors the seven-track TSSC map
+* Install appendix for the Validated Pattern-style hub
+
+== What this repository is not
+
+* It does not ship Helm charts, pipeline YAML, or application source
+* It does not publish Lightwell service-account tokens or git credentials
+* It does not publish the exact remediated library coordinates used on a private demo cluster
+
+== License
+
+Content is provided as-is for enablement. Product names are trademarks of their respective owners.

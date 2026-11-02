@@ -1,0 +1,54 @@
+= 2.2 Remediated pin
+:description: Pin an exact Lightwell .rhlw-* version without publishing the demo GAV
+
+On this page you replace a vulnerable stock coordinate with an exact remediated pin. The pin uses Lightwell’s `.rhlw-*` version suffix on the upstream line you already run.
+
+== Why this control exists
+
+“Upgrade to latest” is not always available. Certification, compatibility, or a release window can lock you on a line. Lightwell supplies a security-only rebuild on that line. The coordinate is exact. Later pages sign, admit, and report evidence for that pin.
+
+This showroom describes the control. It does not publish the exact library coordinates used on a private demo cluster.
+
+== Learning objectives
+
+* Explain the stock profile versus the `lightwell` Maven profile
+* Name the `.rhlw-*` suffix as the remediated pin shape
+* Use the phrase *remediations available* rather than claiming an empty vulnerability set
+
+== Your change
+
+In Dev Spaces, open the application POM.
+
+. Confirm a default (stock) dependency version on the upstream line.
+. Confirm profile `lightwell` overrides that property to a `.rhlw-*` coordinate.
+. Right-click the POM and open Red Hat Dependency Analytics when the private backend is available.
+. On the stock coordinate, note the known vulnerability the scanner names.
+. On the `.rhlw-*` coordinate, note remediations available.
+
+Do not paste the demo GAV into slides, public repos, or this showroom.
+
+== Check
+
+[source,sh]
+----
+# DevWorkspace should be started in namespace lightwell-demo.
+oc -n lightwell-demo get devworkspace
+
+# After a Lightwell PipelineRun, the demo application home shows the remediated pin shape.
+# Replace APPS with the cluster apps domain.
+curl -sk "https://jboss-app-lightwell-demo.${APPS}/" | head
+----
+
+Expect the demo and prod routes to show a `.rhlw-*` library line, and stage to show the stock line, after both PipelineRuns have Succeeded.
+
+== Official documentation
+
+* Lightwell Network patch delivery lifecycle (public Disclosure / OSV / VEX)
+* Configure your Java build tool
+* Red Hat Dependency Analytics
+
+== Key takeaways
+
+* Exact-version remediation is the control. The suffix is `.rhlw-*`.
+* Say remediations available. Do not claim an empty vulnerability set.
+* Track 3 commits those pins into source you own.

@@ -1,0 +1,42 @@
+= 4.1 Source forbid-list
+:description: Keep public FROM, Maven Central, and curl out of active build files
+
+On this page you confirm the build cannot reach around the trusted pins by using public bases, public indexes, or ad-hoc downloads in the files the build actually uses.
+
+== Why this control exists
+
+A trusted pin still fails if the Dockerfile or build script pulls from the public internet. The forbid-list is the source-level half of hermeticity. NetworkPolicy is the cluster half on a later page.
+
+== Learning objectives
+
+* Name public `FROM`, Maven Central, and `curl` as examples of forbid-list hits
+* Confirm active build files on this hub already stay inside the trust boundary
+
+== Your change
+
+Review the container file and Maven settings used by Pipeline `lightwell-build-deploy`. Confirm:
+
+* Runtime `FROM` uses the trusted digest path, not a public floating tag for production builds.
+* Maven resolves through Nexus (`mirrorOf *`), not directly through Central.
+* Build scripts do not `curl` public package indexes as a fallback.
+
+== Check
+
+[source,sh]
+----
+oc -n lightwell-demo get pipeline lightwell-build-deploy
+oc -n lightwell-demo get configmap maven-settings-lightwell \
+  -o jsonpath='{.data.settings\.xml}' | head -40
+----
+
+Expect the pipeline to exist and Maven settings to name the Nexus host shape, with no Lightwell token embedded in the file.
+
+== Official documentation
+
+* OpenShift Pipelines
+* Maven mirror settings
+
+== Key takeaways
+
+* Hermeticity starts in source. NetworkPolicy closes the remaining egress later.
+* Lightwell GAVs resolve from the internal proxy after public fallbacks are removed.

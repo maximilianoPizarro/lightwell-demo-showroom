@@ -1,0 +1,37 @@
+= 4.2 Prefetch
+:description: Resolve declared dependencies before the hermetic image build
+
+On this page you observe that declared Maven dependencies are fetched through Nexus before the image build treats the dependency set as fixed.
+
+== Why this control exists
+
+Hermeto-style prefetch (or the Maven resolve step that stands in for it on this hub) pulls the declared graph into the build workspace while the proxy is reachable. Later network locks must not surprise the compile with a missing GAV.
+
+== Learning objectives
+
+* Find the Maven / prefetch logs on a Succeeded PipelineRun
+* Confirm resolution went through Nexus
+
+== Your change
+
+Open the PipelineRun list in namespace `lightwell-demo`. Open a Succeeded Lightwell run. Expand the Maven (or prefetch) task logs.
+
+== Check
+
+[source,sh]
+----
+oc -n lightwell-demo get pipelinerun
+oc -n lightwell-demo logs -l tekton.dev/pipeline=lightwell-build-deploy --tail=80
+----
+
+Expect Maven output that names the Nexus repository path. Waiting for a cold Maven resolve is prep, not part of the ten-minute clock.
+
+== Official documentation
+
+* Hermeto / Cachi2 prefetch concepts
+* OpenShift Pipelines Task logs
+
+== Key takeaways
+
+* Prefetch makes the declared graph concrete inside the trust boundary.
+* The spoken demo opens finished logs. It does not wait on Maven.

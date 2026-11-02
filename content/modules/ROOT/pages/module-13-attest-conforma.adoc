@@ -1,0 +1,45 @@
+= 5.2 Attest + Conforma
+:description: Validate the signed image with Enterprise Contract / Conforma
+
+On this page you tighten policy until a known-bad image fails and the signed application image passes. Conforma is the Enterprise Contract CLI `ec`.
+
+== Why this control exists
+
+A signature alone is not a release policy. Conforma evaluates the attestation and signature against rules you can show a customer. Admission later refuses what policy rejects.
+
+== Learning objectives
+
+* Name Conforma / `ec` as the policy CLI
+* Run a validate against the signed digest when `ec` is on the workstation
+* State that the ACS image scan on this hub does not block the deploy
+
+== Your change
+
+If `ec` is installed on the workstation used for prep, run validate against the same digest you verified with cosign. During the spoken walk, open the pipeline logs that already show sign and optional policy steps.
+
+Do not say the scan blocks the deploy. On this hub the ACS scan is evidence, not a gate in the PipelineRun success criteria.
+
+== Check
+
+[source,sh]
+----
+# When ec is available on the workstation:
+# ec validate image --image IMAGE@sha256:DIGEST ...
+cosign verify --allow-insecure-registry \
+  --rekor-url "https://REKOR_HOST" \
+  --certificate-identity-regexp ".*" \
+  --certificate-oidc-issuer "https://kubernetes.default.svc" \
+  IMAGE@sha256:DIGEST
+----
+
+Expect verify to pass. Treat a failing `ec` policy against an unsigned test image as the contrast when you rehearse offline.
+
+== Official documentation
+
+* Conforma / Enterprise Contract
+* Trusted Artifact Signer guide (includes Conforma)
+
+== Key takeaways
+
+* Signature plus policy is the integrity story for the app artifact.
+* ACS remains mandatory evidence in track 7. It is not the PipelineRun gate here.

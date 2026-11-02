@@ -1,0 +1,48 @@
+= 6.1 GitOps + admission
+:description: Stage on a stock tag; production denies a tag-only Deployment
+
+On this page you show GitOps promotion and admission. Stage may run a stock tag for comparison. Production accepts an image digest only.
+
+== Why this control exists
+
+Git is the promote path. Admission refuses an unsigned or tag-only production Deployment so a floating tag cannot sneak into the prod namespace.
+
+== Learning objectives
+
+* Open Argo CD Application `gitops-promote`
+* Apply an unsigned / tag-only example and show the deny
+* Keep production Deployments on `@sha256:`
+
+== Your change
+
+. Open Argo CD and the `gitops-promote` Application.
+. Confirm stage tracks the stock tag story and production tracks the Lightwell digest.
+. From a workstation with `oc`, apply the unsigned example shipped with the private pattern (or an equivalent tag-only Deployment aimed at `lightwell-prod`).
+
+[source,sh]
+----
+# Example path on the private pattern tree:
+oc apply -f docs/examples/unsigned-deployment.yaml
+----
+
+== Check
+
+Expect the apply to fail with a message that production accepts an image digest only. Delete any partial object if a create landed.
+
+[source,sh]
+----
+oc -n lightwell-prod get deploy
+oc -n lightwell-stage get deploy
+----
+
+Expect production to show an image reference with `@sha256:`.
+
+== Official documentation
+
+* OpenShift GitOps
+* Admission webhooks / policy
+
+== Key takeaways
+
+* Stage is for comparison. Production is digest-only.
+* Admission does not care which Lightwell model produced the GAV. It cares that the image is the signed digest.

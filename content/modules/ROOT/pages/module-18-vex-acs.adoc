@@ -1,0 +1,43 @@
+= 7.2 VEX blast radius + ACS
+:description: Show Lightwell GAV-bound remediation evidence and ACS for both tags
+
+On this page you report blast radius from the remediated pin and leave Advanced Cluster Security on. Skipping ACS fails the module story.
+
+== Why this control exists
+
+A GAV-bound VEX (or the advisory evidence Lightwell publishes after disclosure) explains whether the pin closed the vulnerability. ACS shows runtime and image risk for the same digests. Both consoles are required.
+
+== Learning objectives
+
+* Open ACS Central for the stock and Lightwell image tags
+* Tie the `.rhlw-*` pin back to remediations available
+* Close with one sentence: Network is post-disclosure; Premier reuses this chain
+
+== Your change
+
+. Open the ACS console (namespace `stackrox`). The admin password lives in Secret `central-htpasswd` key `password`. Retrieve it only when needed; do not commit it.
+. Open the same two image tags you opened in Trusted Profile Analyzer.
+. On the webapp home, show stage stock versus demo and prod `.rhlw-*`.
+. Say: Lightwell Network is the post-disclosure path. Clearinghouse Premier uses the same proxy, the same pin, and the same evidence.
+
+== Check
+
+[source,sh]
+----
+oc -n stackrox get route
+# Password retrieval for login only — do not log the value into shared notes.
+# oc -n stackrox get secret central-htpasswd -o jsonpath='{.data.password}' | base64 -d
+----
+
+Expect the ACS route to answer and both image tags to be visible. Do not skip ACS.
+
+== Official documentation
+
+* Advanced Cluster Security: evaluate security risks
+* Lightwell Network VEX / OSV after Disclosure
+
+== Key takeaways
+
+* ACS is mandatory in the story.
+* Close on the webapp comparison and the Network versus Premier sentence.
+* Do not claim an empty vulnerability set.

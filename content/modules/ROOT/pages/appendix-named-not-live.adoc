@@ -1,0 +1,36 @@
+= Named, not performed live
+:description: Sentences for controls this hub names without running on camera
+
+Use this page when a customer asks about a control that belongs on the TSSC map but is not part of the ten-minute clock on this hub.
+
+|===
+| Control | Spoken sentence
+
+| `oc-mirror` of the Hummingbird base (track 1.2)
+| The dest digest is already bound in source. We mirrored before the show.
+
+| Physical air gap (track 5.3)
+| This cluster stays on the network. The procedure you rehearse offline is key-based verify.
+
+| Live Renovate pull request (track 3.3)
+| Renovate would open the pin PR. The pin is already in source for this walk.
+
+| Hosted Konflux
+| Builds here are OpenShift Pipelines. Konflux mapping is a conversation, not an install.
+
+| Clearinghouse Premier membership or embargo window
+| Network is the post-disclosure path. Premier reuses the same proxy, pin, and evidence store. There is no embargo exercise on this hub.
+
+| Quay / OpenShift Data Foundation
+| The signed image stays on the internal registry. Storage is gp3.
+
+| SPIRE / Zero Trust Workload Identity Manager
+| Out of scope for this supply-chain slice.
+|===
+
+== Phrases to avoid
+
+* Claiming an empty vulnerability set
+* Saying Keycloak signs the image
+* Saying the ACS scan blocks the deploy on this hub
+* Publishing exact demo library coordinates in public notes

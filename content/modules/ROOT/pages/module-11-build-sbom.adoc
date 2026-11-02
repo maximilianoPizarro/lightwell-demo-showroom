@@ -1,0 +1,47 @@
+= 4.4 Build and SBOM
+:description: Produce the application image and a CycloneDX SBOM inside the trust boundary
+
+On this page you confirm the pipeline built the application image and produced an SBOM from what was already inside the trust boundary.
+
+== Why this control exists
+
+The image is an application artifact. The SBOM is the inventory that Trusted Profile Analyzer will store. Both come from the same hermetic build, not from a laptop rebuild after the fact.
+
+== Learning objectives
+
+* Locate image build and SBOM steps on Pipeline `lightwell-build-deploy`
+* Confirm the install PipelineRun `lightwell-build-deploy` reached Succeeded during prep
+
+== Your change
+
+On a prepared hub the chart starts Job `lightwell-start-pipeline`, which creates PipelineRun `lightwell-build-deploy` once. You do not start it during the ten-minute walk.
+
+After that run Succeeded, start the stock profile so stage is ready for comparison (prep only):
+
+[source,sh]
+----
+# Prep only — replace with the hub’s start script or tkn pipeline start.
+# PROFILE=stock ./scripts/start-pipeline.sh
+oc -n lightwell-demo get pipelinerun
+----
+
+== Check
+
+[source,sh]
+----
+oc -n lightwell-demo get pipelinerun lightwell-build-deploy
+# Follow logs only during prep:
+# oc -n lightwell-demo logs -l tekton.dev/pipeline=lightwell-build-deploy -f
+----
+
+Expect Succeeded. The image lands in the internal registry. The SBOM is available for the publish step in track 5 and the system of record in track 7.
+
+== Official documentation
+
+* CycloneDX specification
+* OpenShift Builds / Pipelines
+
+== Key takeaways
+
+* Build and SBOM are one hermetic production step.
+* Two Succeeded runs (Lightwell and stock) are prep for the spoken comparison.

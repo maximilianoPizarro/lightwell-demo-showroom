@@ -1,0 +1,39 @@
+= 4.3 Build NetworkPolicy
+:description: Constrain build egress so the compile cannot reach around Nexus
+
+On this page you name the network half of hermeticity. Build pods should not fall through to the public internet for libraries.
+
+== Why this control exists
+
+Source forbid-lists stop obvious public URLs. A NetworkPolicy on the build namespace stops the remaining egress. Premier does not add a public fallback. Lightwell GAVs resolve from the internal proxy after egress is denied.
+
+On this demo hub, treat the pipeline’s Nexus-only Maven path as the control you show. Additional NetworkPolicies may exist for operators (for example External Secrets to Vault). Do not weaken those during the show.
+
+== Learning objectives
+
+* Explain why build egress belongs in the hermetic story
+* Avoid opening broad egress “to make Maven work” on camera
+
+== Your change
+
+Confirm the pipeline still Succeeded with Maven aimed only at Nexus. If you add NetworkPolicies in a longer lab, keep DNS and Nexus, and deny general internet package indexes.
+
+== Check
+
+[source,sh]
+----
+oc -n lightwell-demo get networkpolicy
+oc -n lightwell-demo get pipelinerun -o wide
+----
+
+Expect at least one Succeeded Lightwell PipelineRun. NetworkPolicy objects vary by chart revision; the Check that matters for the story is a green run that did not need Maven Central.
+
+== Official documentation
+
+* OpenShift NetworkPolicy
+* Building hermetic containers
+
+== Key takeaways
+
+* NetworkPolicy closes the hole source review cannot see at runtime.
+* Do not “fix” a failed build by opening the cluster to the public index.
